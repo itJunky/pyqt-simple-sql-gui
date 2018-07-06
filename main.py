@@ -2,45 +2,25 @@
 
 import sys, os
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QTableView
 from PyQt5.QtSql import QSqlQueryModel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 
-import design
 import db
 
-class DBSelectorApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
-    def __init__(self):
-        # access to objects in design.py
-        super().__init__()
-        # init design
-        self.setupUi(self)
-        self.pushButton.clicked.connect(self.browse_folder)
-
-        self.setStyleSheet("QTableView {background-color: transparent;}")
-
-
-    def browse_folder(self):
-        self.listWidget.clear()
-        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose db file")
-
-        if directory:
-            for file_name in os.listdir(directory):
-                self.listWidget.addItem(file_name)
-
-
-    def browse_folder_t(self):
-        # self.tableView.clear()
-        table = self.createView()
-
+offset = 0
+views = []
 
 def createView(title, model):
-    view = QTableView()
+    global offset, views
+
+    view = QtWidgets.QTableView()
+    views.append(view)
     view.setModel(model)
     view.setWindowTitle(title)
-    return view
-
+    view.move(100 + offset, 100 + offset)
+    offset += 20
+    view.show()
 
 class ExampleData(QSqlQueryModel):
     def data(self, index, role):
@@ -66,14 +46,14 @@ def initializeModel(model):
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    window = DBSelectorApp()
-    window.show()
 
-    if not db.createConnection(): sys.exit(1)
-    exampleModel = QSqlQueryModel()
+    dbPath = None
+    if not db.createConnection(dbPath): sys.exit(1)
+    exampleModel = ExampleData()
     initializeModel(exampleModel)
     createView("Example", exampleModel)
-    app.exec_()
+
+    sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
