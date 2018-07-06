@@ -6,10 +6,26 @@ from PyQt5.QtSql import QSqlQueryModel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 
+import design
 import db
 
 offset = 0
 views = []
+
+class DBAdminApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
+    def __init__(self, dbModel=None):
+        super().__init__()
+        self.setupUi(self, dbModel)
+        self.pushButton.clicked.connect(self.browseFolder)
+
+
+    def browseFolder(self):
+        self.listWidget.clear()
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose dir")
+
+        if directory:
+            for file_name in os.listdir(directory):
+                self.listWidget.addItem(file_name)
 
 def createView(title, model):
     global offset, views
@@ -18,7 +34,8 @@ def createView(title, model):
     views.append(view)
     view.setModel(model)
     view.setWindowTitle(title)
-    view.move(100 + offset, 100 + offset)
+    view.adjustSize()
+    view.move(100 + offset, 200 + offset)
     offset += 20
     view.show()
 
@@ -48,10 +65,15 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
 
     dbPath = None
-    if not db.createConnection(dbPath): sys.exit(1)
+    if not db.createConnection(dbPath):
+        sys.exit(1)
+
     exampleModel = ExampleData()
     initializeModel(exampleModel)
-    createView("Example", exampleModel)
+    window = DBAdminApp(exampleModel)
+
+    # createView("Example", exampleModel)
+    window.show()
 
     sys.exit(app.exec_())
 
