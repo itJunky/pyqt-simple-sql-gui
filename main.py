@@ -10,7 +10,7 @@ import design
 import db
 
 class DBAdminApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
-    def __init__(self, dbModel=None):
+    def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.pushButton.clicked.connect(self.initializeModel)
@@ -26,24 +26,13 @@ class DBAdminApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def initializeModel(self):
         model = ExampleData()
-        model.setQuery('select * from user')
+        request = self.sqlRequestEdit.text()
+        model.setQuery(request)
         model.setHeaderData(0, Qt.Horizontal, "ID")
         model.setHeaderData(1, Qt.Horizontal, "Name")
         model.setHeaderData(2, Qt.Horizontal, "Email")
         self.tableView.setModel(model)
 
-
-# def createView(title, model):
-#     global offset, views
-#
-#     view = QtWidgets.QTableView()
-#     views.append(view)
-#     view.setModel(model)
-#     view.setWindowTitle(title)
-#     view.adjustSize()
-#     view.move(100 + offset, 200 + offset)
-#     offset += 20
-#     view.show()
 
 class ExampleData(QSqlQueryModel):
     def data(self, index, role):

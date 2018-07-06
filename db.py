@@ -16,4 +16,10 @@ def createConnection(dbPath):
 	query.exec_("insert into user values(5, 'Zoja', 'z@i.ru')")
 	query.exec_("insert into user values(101, 'Sergey', 's@s.com')")
 
+	query.exec_("create table subscribe(id int primary key, user_id int, name varchar(20))")
+	query.exec_("insert into subscribe values(1, 1, 'gazetaru')")
+	query.exec_("insert into subscribe values(2, 5, 'gazetaru')")
+	query.exec_("insert into subscribe values(3, 101, 'gazetaru')")
+	query.exec_("insert into subscribe values(4, 1, 'lxf')")
+
 	return True
