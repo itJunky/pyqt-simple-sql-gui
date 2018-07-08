@@ -38,6 +38,22 @@ class DBAdminApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.model.setQuery(request)
         self.tableView.setModel(self.model)
 
+    # A key has been pressed!
+    def keyPressEvent(self, event):
+        print("ent: " + str(Qt.Key_Return))
+        # Did the user press the Escape key?
+        key = event.key()
+        print(key)
+        if key == Qt.Key_Escape:
+            # Close the window
+            self.close()
+        elif key == Qt.Key_Return:
+            # Request like a button press
+            self.pushButton.click()
+            print('Push')
+
+        # No:  Do nothing.
+
 
 class ExampleData(QSqlQueryModel):
     def data(self, index, role):
