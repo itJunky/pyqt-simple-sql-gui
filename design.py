@@ -6,12 +6,13 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+import sys
+from PyQt5 import QtCore, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(381, 349)
+        MainWindow.resize(450, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -25,11 +26,16 @@ class Ui_MainWindow(object):
         self.tableView = QtWidgets.QTableView(self.centralwidget)
         self.tableView.setObjectName("tableView")
         self.verticalLayout.addWidget(self.tableView)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.allTableButton = QtWidgets.QPushButton(self.centralwidget)
+        self.allTableButton.setObjectName("allTableButton")
+        self.horizontalLayout.addWidget(self.allTableButton)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
-        self.verticalLayout.addWidget(self.pushButton)
+        self.horizontalLayout.addWidget(self.pushButton)
+        self.verticalLayout.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
-
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -37,7 +43,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "DBAdmin"))
-        self.sqlConnectionEdit.setText(_translate("MainWindow", ":memory:"))
-        self.sqlRequestEdit.setText(_translate("MainWindow", "select * from user"))
-        self.pushButton.setText(_translate("MainWindow", "Show"))
-
+        if sys.argv[1:]:
+            print(sys.argv[1])
+            self.sqlConnectionEdit.setText(_translate("MainWindow", sys.argv[1]))
+        else:
+            self.sqlConnectionEdit.setText(_translate("MainWindow", ":memory:"))
+        self.sqlRequestEdit.setText(_translate("MainWindow", "SELECT name FROM sqlite_master WHERE type='table'"))
+        self.allTableButton.setText(_translate("MainWindow", "All Tables"))
+        self.pushButton.setText(_translate("MainWindow", "Query"))
